@@ -1,6 +1,6 @@
 # devctl
 
-🚀 一个强大的 npm 开发服务器后台管理工具
+🚀 简单的 npm dev 命令后台管理工具
 
 [![npm version](https://badge.fury.io/js/devctl.svg)](https://badge.fury.io/js/devctl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -8,17 +8,16 @@
 
 ## 📖 简介
 
-devctl 是一个专为前端开发者设计的 npm 包，它可以将你的 `npm run dev` 命令置于后台运行，并提供一套完整的管理命令来控制和监控开发服务器。告别终端被开发服务器占用的烦恼，让你的开发流程更加高效！
+devctl 是一个轻量级的工具，可以将你的 `npm run dev` 命令置于后台运行，并提供简单的管理命令。让你在开发时不再被占用终端，同时自动记录开发服务器的日志输出。
 
 ### 🌟 特性
 
-- 🔄 **后台运行**：将开发服务器置于后台，释放终端
-- 📝 **日志管理**：自动记录和管理开发服务器日志
-- ⚡ **快速控制**：简单的命令即可启动、停止、重启服务
-- 📊 **状态监控**：实时查看服务器运行状态和资源使用情况
-- 🛠️ **灵活配置**：支持多种配置方式和自定义参数
+- 🔄 **后台运行**：将 `npm run dev` 置于后台，释放终端
+- 📝 **日志记录**：自动将控制台输出重定向到日志文件
+- ⚡ **简单控制**：启动、停止、重启、查看状态
+- 📊 **状态查询**：查看服务器运行状态和进程信息
 - 🎯 **跨平台**：支持 Windows、macOS 和 Linux
-- 🔍 **实时日志**：支持实时查看和历史日志查询
+- 🔍 **日志查看**：支持实时日志跟踪
 
 ## 🚀 快速开始
 
@@ -42,7 +41,7 @@ devctl start
 devctl status
 
 # 查看实时日志
-devctl logs --follow
+devctl logs
 
 # 停止服务器
 devctl stop
@@ -51,40 +50,34 @@ devctl stop
 devctl restart
 ```
 
-## 📚 详细使用指南
+## 📚 命令说明
 
-### 命令概览
+### 可用命令
 
-| 命令 | 简写 | 描述 |
-|------|------|------|
-| `devctl start [options]` | `devctl s` | 启动开发服务器 |
-| `devctl stop` | `devctl down` | 停止开发服务器 |
-| `devctl restart` | `devctl r` | 重启开发服务器 |
-| `devctl status` | `devctl ps` | 查看服务器状态 |
-| `devctl logs [options]` | `devctl log` | 查看日志 |
-| `devctl config <action>` | - | 配置管理 |
+| 命令 | 描述 |
+|------|------|
+| `devctl start` | 后台启动 `npm run dev` |
+| `devctl stop` | 停止开发服务器 |
+| `devctl restart` | 重启开发服务器 |
+| `devctl status` | 查看服务器运行状态 |
+| `devctl logs` | 查看实时日志 |
 
-### 启动服务器
+### 使用示例
 
+启动开发服务器：
 ```bash
-# 基本启动
 devctl start
-
-# 指定端口启动
-devctl start --port 3000
-
-# 指定环境启动
-devctl start --env production
-
-# 静默启动
-devctl start --silent
-
-# 使用自定义配置文件
-devctl start --config ./my-devctl.config.js
 ```
 
-### 查看状态
+输出示例：
+```
+🚀 正在启动开发服务器...
+✅ 开发服务器已启动!
+📝 进程ID: 12345
+📄 日志文件: ./logs/dev.log
+```
 
+查看状态：
 ```bash
 devctl status
 ```
@@ -92,271 +85,71 @@ devctl status
 输出示例：
 ```
 ✅ 开发服务器正在运行
-🔗 访问地址: http://localhost:5173
 📝 进程ID: 12345
-📄 日志文件: /path/to/project/logs/dev.log
+📄 日志文件: ./logs/dev.log
 🕐 运行时间: 01:23:45
-💾 内存使用: 85.2MB
 ```
 
-### 日志管理
-
+查看日志：
 ```bash
-# 查看最新日志
 devctl logs
-
-# 实时跟随日志
-devctl logs --follow
-
-# 查看指定行数
-devctl logs --lines 100
-
-# 从指定时间开始查看
-devctl logs --since "2024-01-01 10:00:00"
-
-# 搜索关键词
-devctl logs --grep "error"
 ```
 
-### 配置管理
+这会实时显示开发服务器的输出日志。
 
-```bash
-# 查看所有配置
-devctl config list
+## 📁 文件结构
 
-# 获取特定配置
-devctl config get port
+devctl 会在项目根目录创建一个 `logs` 文件夹：
 
-# 设置配置
-devctl config set port 3000
-
-# 删除配置
-devctl config delete port
+```
+logs/
+├── dev.log          # 开发服务器日志
+└── dev.pid          # 进程ID文件
 ```
 
-## ⚙️ 配置
+- `dev.log`：记录 `npm run dev` 的所有控制台输出
+- `dev.pid`：存储当前运行的进程ID
 
-### 配置文件
+## 🔧 工作原理
 
-devctl 支持多种配置方式，按优先级排序：
+1. **启动时**：`devctl start` 执行 `npm run dev` 并将其置于后台
+2. **日志记录**：将所有控制台输出重定向到 `logs/dev.log` 文件
+3. **进程管理**：将进程ID保存到 `logs/dev.pid` 文件
+4. **状态查询**：通过检查进程ID来判断服务器是否还在运行
+5. **停止服务**：通过进程ID来终止后台运行的开发服务器
 
-1. 命令行参数
-2. 项目配置文件 (`devctl.config.js`)
-3. 用户配置文件 (`~/.devctlrc`)
-4. 默认配置
+## 🐛 常见问题
 
-### 配置文件示例
+### 问题：端口被占用
 
-创建 `devctl.config.js`：
+如果你的开发服务器提示端口被占用，这是正常的，因为 devctl 不控制端口分配，它只是代理执行 `npm run dev` 命令。
 
-```javascript
-module.exports = {
-  // 默认启动命令
-  command: 'npm run dev',
-  
-  // 默认端口
-  port: 3000,
-  
-  // 环境变量
-  env: {
-    NODE_ENV: 'development'
-  },
-  
-  // 日志配置
-  logs: {
-    level: 'info',
-    maxSize: '100MB',
-    maxFiles: 5,
-    directory: './logs'
-  },
-  
-  // 自动重启配置
-  watch: {
-    files: ['package.json', 'vite.config.js'],
-    ignore: ['node_modules/**']
-  }
-}
-```
-
-### 环境变量
-
-```bash
-# 设置默认端口
-export DEVCTL_PORT=3000
-
-# 设置日志级别
-export DEVCTL_LOG_LEVEL=debug
-
-# 设置配置文件路径
-export DEVCTL_CONFIG_PATH=./custom-config.js
-```
-
-## 🎛️ API 参考
-
-### 命令行选项
-
-#### start 命令选项
-
-| 选项 | 类型 | 默认值 | 描述 |
-|------|------|--------|------|
-| `--port <number>` | number | - | 指定端口号 |
-| `--env <environment>` | string | - | 指定环境 |
-| `--silent` | boolean | false | 静默模式 |
-| `--verbose` | boolean | false | 详细输出 |
-| `--config <path>` | string | - | 配置文件路径 |
-| `--no-logs` | boolean | false | 禁用日志记录 |
-
-#### logs 命令选项
-
-| 选项 | 类型 | 默认值 | 描述 |
-|------|------|--------|------|
-| `--follow, -f` | boolean | false | 实时跟随日志 |
-| `--lines, -n <number>` | number | 50 | 显示行数 |
-| `--since <time>` | string | - | 从指定时间开始 |
-| `--grep <pattern>` | string | - | 搜索模式 |
-| `--level <level>` | string | - | 日志级别过滤 |
-
-### 配置选项
-
-| 配置项 | 类型 | 默认值 | 描述 |
-|--------|------|--------|------|
-| `command` | string | 'npm run dev' | 启动命令 |
-| `port` | number | - | 默认端口 |
-| `env` | object | {} | 环境变量 |
-| `logs.level` | string | 'info' | 日志级别 |
-| `logs.directory` | string | './logs' | 日志目录 |
-| `logs.maxSize` | string | '100MB' | 最大日志文件大小 |
-| `logs.maxFiles` | number | 5 | 最大日志文件数 |
-
-## 🔧 高级用法
-
-### 多项目管理
-
-```bash
-# 为项目设置别名
-devctl config set projects.frontend /path/to/frontend
-devctl config set projects.backend /path/to/backend
-
-# 启动特定项目
-devctl start --project frontend
-
-# 查看所有项目状态
-devctl status --all
-```
-
-### 钩子脚本
-
-在配置文件中定义钩子：
-
-```javascript
-module.exports = {
-  hooks: {
-    beforeStart: './scripts/before-start.sh',
-    afterStart: './scripts/after-start.sh',
-    beforeStop: './scripts/before-stop.sh',
-    afterStop: './scripts/after-stop.sh'
-  }
-}
-```
-
-### 自定义命令
-
-```javascript
-module.exports = {
-  commands: {
-    // 自定义启动命令
-    start: 'yarn dev --host',
-    
-    // 带参数的命令
-    build: 'npm run build -- --mode=development'
-  }
-}
-```
-
-## 🐛 故障排除
-
-### 常见问题
-
-#### 1. 端口被占用
-
-```bash
-Error: Port 3000 is already in use
-```
-
-**解决方案**：
-- 使用 `--port` 指定其他端口
-- 或设置配置 `devctl config set port 3001`
-
-#### 2. 权限不足
-
-```bash
-Error: Permission denied
-```
-
-**解决方案**：
-- 检查日志目录权限：`chmod 755 logs/`
-- 或使用 `sudo` 运行（不推荐）
-
-#### 3. 进程丢失
+### 问题：进程丢失
 
 ```bash
 Warning: Process not found, cleaning up PID file
 ```
 
-**解决方案**：
-- 这是正常的自动清理行为
-- 重新启动服务即可：`devctl start`
-
-#### 4. 配置文件错误
-
+这是正常的清理行为，重新启动即可：
 ```bash
-Error: Invalid configuration file
-```
-
-**解决方案**：
-- 检查配置文件语法
-- 使用 `devctl config list` 验证配置
-
-### 调试模式
-
-```bash
-# 启用调试模式
-DEBUG=devctl* devctl start
-
-# 或使用环境变量
-export DEBUG=devctl*
 devctl start
 ```
 
-### 日志分析
+### 问题：权限不足
+
+确保对项目目录有写权限，以便创建 `logs` 文件夹。
+
+## 💻 开发
+
+### 本地开发
 
 ```bash
-# 查看错误日志
-devctl logs --level error
-
-# 查看最近的启动日志
-devctl logs --grep "starting" --lines 10
-
-# 导出日志
-devctl logs > debug.log
-```
-
-## 🤝 贡献指南
-
-我们欢迎所有形式的贡献！
-
-### 开发环境设置
-
-```bash
-# 克隆仓库
-git clone https://github.com/your-username/devctl.git
+# 克隆项目
+git clone <repository-url>
 cd devctl
 
 # 安装依赖
 npm install
-
-# 运行测试
-npm test
 
 # 构建项目
 npm run build
@@ -365,47 +158,6 @@ npm run build
 npm link
 ```
 
-### 提交规范
-
-我们使用 [Conventional Commits](https://conventionalcommits.org/) 规范：
-
-```bash
-feat: 添加新功能
-fix: 修复bug
-docs: 更新文档
-style: 代码格式调整
-refactor: 代码重构
-test: 添加测试
-chore: 构建流程或辅助工具的变动
-```
-
-### 问题报告
-
-请在 [GitHub Issues](https://github.com/your-username/devctl/issues) 中报告问题，并提供：
-
-- 操作系统和版本
-- Node.js 版本
-- devctl 版本
-- 完整的错误信息
-- 复现步骤
-
 ## 📄 许可证
 
 本项目采用 [MIT 许可证](LICENSE)。
-
-## 🙏 致谢
-
-- 感谢所有贡献者
-- 灵感来源于 [PM2](https://pm2.keymetrics.io/) 和 [nodemon](https://nodemon.io/)
-
-## 📞 联系我们
-
-- GitHub: [https://github.com/your-username/devctl](https://github.com/your-username/devctl)
-- 问题反馈: [GitHub Issues](https://github.com/your-username/devctl/issues)
-- 邮箱: your-email@example.com
-
----
-
-<div align="center">
-Made with ❤️ by <a href="https://github.com/your-username">Your Name</a>
-</div>

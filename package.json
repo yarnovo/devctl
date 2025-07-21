@@ -1,0 +1,61 @@
+{
+  "name": "devctl",
+  "version": "0.0.0",
+  "description": "简单的 npm dev 命令后台管理工具",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "devctl": "bin/devctl.js"
+  },
+  "workspaces": [
+    "e2e/test-project"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:unit": "vitest run",
+    "test:integration": "vitest run tests/integration.test.ts",
+    "test:e2e": "cd e2e && vitest run --config ./vitest.config.ts",
+    "test:coverage": "vitest --coverage",
+    "test:all": "npm run test:unit && npm run test:e2e",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "dev",
+    "development",
+    "npm",
+    "background",
+    "daemon",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "commander": "^11.1.0",
+    "memfs": "^4.17.2",
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

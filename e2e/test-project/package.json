@@ -1,0 +1,9 @@
+{
+  "name": "devctl-test-project",
+  "version": "1.0.0",
+  "description": "用于测试 devctl 的模拟项目",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js"
+  }
+}
