@@ -13,8 +13,8 @@ export default defineConfig({
         singleFork: true
       }
     },
-    // 包含所有测试文件
-    include: ['tests/**/*.test.{ts,js}'],
+    // 包含所有 e2e 测试文件
+    include: ['e2e/tests/**/*.test.{ts,js}'],
     // 排除 node_modules
     exclude: ['**/node_modules/**']
   }

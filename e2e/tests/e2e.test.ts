@@ -132,7 +132,7 @@ describe('devctl E2E Tests', () => {
       
       // 检查日志内容
       const logContent = await readFile(LOG_FILE)
-      expect(logContent).toContain('Dev server started')
+      expect(logContent).toContain('Dev server started at http://localhost:3000')
     })
 
     it('should prevent duplicate starts', async () => {
@@ -223,7 +223,7 @@ describe('devctl E2E Tests', () => {
       
       // 检查日志中的重启记录
       const logContent = await readFile(LOG_FILE)
-      expect(logContent).toContain('手动停止服务器')
+      expect(logContent).toContain('Dev server started at http://localhost:3000')
     })
   })
 

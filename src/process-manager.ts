@@ -1,5 +1,6 @@
 import { spawn, exec } from 'child_process'
 import { promisify } from 'util'
+import fs from 'fs'
 import { inject, injectable } from 'tsyringe'
 import { ProcessInfo } from './types.js'
 import { FileService } from './services/file-service.js'
@@ -45,11 +46,17 @@ export class ProcessManager {
     }
 
     // 启动开发服务器
+    // 使用独立的文件描述符来写入日志，避免阻塞主进程
+    const logFd = fs.openSync(this.config.logFile, 'a')
+    
     const child = spawn('npm', ['run', 'dev'], {
       detached: true,
-      stdio: ['ignore', 'pipe', 'pipe'],
+      stdio: ['ignore', logFd, logFd],
       cwd: process.cwd()
     })
+
+    // 关闭文件描述符
+    fs.closeSync(logFd)
 
     // 保存PID
     await this.fileService.writePidFile(this.config.pidFile, child.pid!)
@@ -63,24 +70,8 @@ export class ProcessManager {
       ''
     ].join('\n')
 
-    // 写入日志头部
-    await this.fileService.fs.appendFile(this.config.logFile, logHeader)
-
-    // 重定向输出到日志文件
-    child.stdout?.on('data', async (data) => {
-      await this.fileService.fs.appendFile(this.config.logFile, data.toString())
-    })
-
-    child.stderr?.on('data', async (data) => {
-      await this.fileService.fs.appendFile(this.config.logFile, data.toString())
-    })
-
-    // 处理子进程退出
-    child.on('exit', async (code) => {
-      const exitLog = `\n=== devctl 开发服务器退出 ${new Date().toISOString()} (代码: ${code}) ===\n\n`
-      await this.fileService.fs.appendFile(this.config.logFile, exitLog)
-      await this.fileService.removePidFile(this.config.pidFile)
-    })
+    // 写入日志头部（在子进程输出之前）
+    fs.appendFileSync(this.config.logFile, logHeader)
 
     // 分离子进程，让它在后台运行
     child.unref()
