@@ -7,6 +7,19 @@
 
 ## [Unreleased]
 
+### Changed
+
+#### CI/CD 配置
+
+- 添加 GitHub Actions 权限设置（contents: write, packages: write）
+- 更换 GitHub Release Action 为 softprops/action-gh-release
+- 支持自动生成发布说明（generate_release_notes: true）
+
+#### 文档
+
+- 将项目描述翻译为英文（A simple npm dev command background management tool）
+- 更新部署文档支持更多预发布版本后缀（alpha, beta, rc, dev）
+
 ## [0.1.0-dev.0] - 2025-07-21
 
 ### Added
@@ -40,4 +53,5 @@
 - `check` 命令一键运行类型检查、代码检查和测试
 - `format` 和 `format:check` 命令用于代码格式化
 
-[Unreleased]: https://github.com/yarnovo/devctl
+[Unreleased]: https://github.com/yarnovo/devctl/compare/v0.1.0-dev.0...HEAD
+[0.1.0-dev.0]: https://github.com/yarnovo/devctl/releases/tag/v0.1.0-dev.0
