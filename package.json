@@ -1,6 +1,6 @@
 {
   "name": "devctl",
-  "version": "0.1.0-dev.1",
+  "version": "0.1.0-dev.2",
   "description": "A simple background process manager for npm dev commands",
   "type": "module",
   "main": "dist/index.js",
