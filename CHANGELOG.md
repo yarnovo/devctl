@@ -7,6 +7,8 @@
 
 ## [Unreleased]
 
+## [0.1.0-dev.1] - 2025-07-21
+
 ### Changed
 
 #### CI/CD 配置
