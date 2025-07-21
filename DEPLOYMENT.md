@@ -161,7 +161,7 @@ act push --ref refs/tags/v1.0.0
    - [ ] 没有敏感信息或密钥
 
 3. **预发布版本**
-   - 使用 `-beta`、`-alpha` 等后缀标记预发布版本
+   - 使用 `-beta`、`-alpha`、`-dev` 等后缀标记预发布版本
    - GitHub Actions 会自动将其标记为 prerelease
 
 4. **回滚策略**
