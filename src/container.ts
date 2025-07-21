@@ -1,6 +1,9 @@
 import 'reflect-metadata'
 import { container } from 'tsyringe'
-import { IFileSystem, FILE_SYSTEM_TOKEN } from './interfaces/file-system.interface.js'
+import {
+  IFileSystem,
+  FILE_SYSTEM_TOKEN,
+} from './interfaces/file-system.interface.js'
 import { RealFileSystem } from './infrastructure/real-file-system.js'
 import { ProcessManager } from './process-manager.js'
 

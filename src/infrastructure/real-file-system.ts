@@ -4,23 +4,40 @@ import { IFileSystem } from '../interfaces/file-system.interface.js'
 
 @injectable()
 export class RealFileSystem implements IFileSystem {
-  async readFile(path: string, encoding: BufferEncoding = 'utf8'): Promise<string> {
+  async readFile(
+    path: string,
+    encoding: BufferEncoding = 'utf8'
+  ): Promise<string> {
     return fs.readFile(path, encoding)
   }
 
-  async writeFile(path: string, data: string, encoding: BufferEncoding = 'utf8'): Promise<void> {
+  async writeFile(
+    path: string,
+    data: string,
+    encoding: BufferEncoding = 'utf8'
+  ): Promise<void> {
     await fs.writeFile(path, data, encoding)
   }
 
-  async appendFile(path: string, data: string, encoding: BufferEncoding = 'utf8'): Promise<void> {
+  async appendFile(
+    path: string,
+    data: string,
+    encoding: BufferEncoding = 'utf8'
+  ): Promise<void> {
     await fs.appendFile(path, data, encoding)
   }
 
-  async mkdir(path: string, options: { recursive?: boolean } = {}): Promise<void> {
+  async mkdir(
+    path: string,
+    options: { recursive?: boolean } = {}
+  ): Promise<void> {
     await fs.mkdir(path, options)
   }
 
-  async rmdir(path: string, options: { recursive?: boolean } = {}): Promise<void> {
+  async rmdir(
+    path: string,
+    options: { recursive?: boolean } = {}
+  ): Promise<void> {
     await fs.rmdir(path, options)
   }
 
@@ -49,7 +66,10 @@ export class RealFileSystem implements IFileSystem {
     await fs.unlink(path)
   }
 
-  async rm(path: string, options: { recursive?: boolean, force?: boolean } = {}): Promise<void> {
+  async rm(
+    path: string,
+    options: { recursive?: boolean; force?: boolean } = {}
+  ): Promise<void> {
     await fs.rm(path, options)
   }
 }

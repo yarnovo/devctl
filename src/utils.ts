@@ -7,7 +7,7 @@ export function getConfig(): DevctlConfig {
   return {
     logsDir,
     logFile: join(logsDir, 'dev.log'),
-    pidFile: join(logsDir, 'dev.pid')
+    pidFile: join(logsDir, 'dev.pid'),
   }
 }
 
@@ -29,7 +29,10 @@ export async function readPidFile(pidFile: string): Promise<number | null> {
   }
 }
 
-export async function writePidFile(pidFile: string, pid: number): Promise<void> {
+export async function writePidFile(
+  pidFile: string,
+  pid: number
+): Promise<void> {
   await fs.writeFile(pidFile, pid.toString(), 'utf8')
 }
 
@@ -54,10 +57,10 @@ export function isProcessRunning(pid: number): boolean {
 export function formatUptime(startTime: Date): string {
   const now = new Date()
   const diffMs = now.getTime() - startTime.getTime()
-  
+
   const hours = Math.floor(diffMs / (1000 * 60 * 60))
   const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
   const seconds = Math.floor((diffMs % (1000 * 60)) / 1000)
-  
+
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }

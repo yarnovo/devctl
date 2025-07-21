@@ -1,13 +1,14 @@
 import { inject, injectable } from 'tsyringe'
 import { join } from 'path'
 import { DevctlConfig } from '../types.js'
-import { IFileSystem, FILE_SYSTEM_TOKEN } from '../interfaces/file-system.interface.js'
+import {
+  IFileSystem,
+  FILE_SYSTEM_TOKEN,
+} from '../interfaces/file-system.interface.js'
 
 @injectable()
 export class FileService {
-  constructor(
-    @inject(FILE_SYSTEM_TOKEN) private fileSystem: IFileSystem
-  ) {}
+  constructor(@inject(FILE_SYSTEM_TOKEN) private fileSystem: IFileSystem) {}
 
   get fs(): IFileSystem {
     return this.fileSystem
@@ -18,7 +19,7 @@ export class FileService {
     return {
       logsDir,
       logFile: join(logsDir, 'dev.log'),
-      pidFile: join(logsDir, 'dev.pid')
+      pidFile: join(logsDir, 'dev.pid'),
     }
   }
 
@@ -69,11 +70,11 @@ export class FileService {
   formatUptime(startTime: Date): string {
     const now = new Date()
     const diffMs = now.getTime() - startTime.getTime()
-    
+
     const hours = Math.floor(diffMs / (1000 * 60 * 60))
     const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
     const seconds = Math.floor((diffMs % (1000 * 60)) / 1000)
-    
+
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
   }
 }

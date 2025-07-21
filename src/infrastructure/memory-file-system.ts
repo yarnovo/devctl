@@ -11,23 +11,40 @@ export class MemoryFileSystem implements IFileSystem {
     this.fs = fs
   }
 
-  async readFile(path: string, encoding: BufferEncoding = 'utf8'): Promise<string> {
+  async readFile(
+    path: string,
+    encoding: BufferEncoding = 'utf8'
+  ): Promise<string> {
     return this.fs.promises.readFile(path, encoding) as Promise<string>
   }
 
-  async writeFile(path: string, data: string, encoding: BufferEncoding = 'utf8'): Promise<void> {
+  async writeFile(
+    path: string,
+    data: string,
+    encoding: BufferEncoding = 'utf8'
+  ): Promise<void> {
     await this.fs.promises.writeFile(path, data, { encoding })
   }
 
-  async appendFile(path: string, data: string, encoding: BufferEncoding = 'utf8'): Promise<void> {
+  async appendFile(
+    path: string,
+    data: string,
+    encoding: BufferEncoding = 'utf8'
+  ): Promise<void> {
     await this.fs.promises.appendFile(path, data, { encoding })
   }
 
-  async mkdir(path: string, options: { recursive?: boolean } = {}): Promise<void> {
+  async mkdir(
+    path: string,
+    options: { recursive?: boolean } = {}
+  ): Promise<void> {
     await this.fs.promises.mkdir(path, options)
   }
 
-  async rmdir(path: string, options: { recursive?: boolean } = {}): Promise<void> {
+  async rmdir(
+    path: string,
+    options: { recursive?: boolean } = {}
+  ): Promise<void> {
     await this.fs.promises.rmdir(path, options)
   }
 
@@ -56,7 +73,10 @@ export class MemoryFileSystem implements IFileSystem {
     await this.fs.promises.unlink(path)
   }
 
-  async rm(path: string, options: { recursive?: boolean, force?: boolean } = {}): Promise<void> {
+  async rm(
+    path: string,
+    options: { recursive?: boolean; force?: boolean } = {}
+  ): Promise<void> {
     await this.fs.promises.rm(path, options)
   }
 

@@ -11,9 +11,7 @@ const execAsync = promisify(exec)
 export class ProcessManager {
   private config
 
-  constructor(
-    @inject(FileService) private fileService: FileService
-  ) {
+  constructor(@inject(FileService) private fileService: FileService) {
     this.config = this.fileService.getConfig()
   }
 
@@ -22,7 +20,7 @@ export class ProcessManager {
     const existingPid = await this.fileService.readPidFile(this.config.pidFile)
     if (existingPid && this.fileService.isProcessRunning(existingPid)) {
       console.log(`❌ 开发服务器已经在运行中! PID: ${existingPid}`)
-      console.log('💡 使用 \'devctl stop\' 停止服务器')
+      console.log("💡 使用 'devctl stop' 停止服务器")
       return
     }
 
@@ -39,7 +37,7 @@ export class ProcessManager {
     try {
       // 检查 npm run dev 命令是否存在
       await execAsync('npm run dev --help')
-    } catch (error) {
+    } catch {
       console.log('❌ npm run dev 命令不存在!')
       console.log('💡 请确保 package.json 中配置了 dev 脚本')
       return
@@ -48,11 +46,11 @@ export class ProcessManager {
     // 启动开发服务器
     // 使用独立的文件描述符来写入日志，避免阻塞主进程
     const logFd = fs.openSync(this.config.logFile, 'a')
-    
+
     const child = spawn('npm', ['run', 'dev'], {
       detached: true,
       stdio: ['ignore', logFd, logFd],
-      cwd: process.cwd()
+      cwd: process.cwd(),
     })
 
     // 关闭文件描述符
@@ -67,7 +65,7 @@ export class ProcessManager {
       `项目目录: ${process.cwd()}`,
       `进程ID: ${child.pid}`,
       '='.repeat(50),
-      ''
+      '',
     ].join('\n')
 
     // 写入日志头部（在子进程输出之前）
@@ -77,7 +75,7 @@ export class ProcessManager {
     child.unref()
 
     // 等待一下确保服务器启动
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 2000))
 
     if (this.fileService.isProcessRunning(child.pid!)) {
       console.log('✅ 开发服务器已启动!')
@@ -97,7 +95,7 @@ export class ProcessManager {
 
   async stop(): Promise<void> {
     const pid = await this.fileService.readPidFile(this.config.pidFile)
-    
+
     if (!pid) {
       console.log('❌ 开发服务器未运行')
       return
@@ -114,11 +112,11 @@ export class ProcessManager {
     try {
       // 尝试优雅停止
       process.kill(pid, 'SIGTERM')
-      
+
       // 等待进程结束
       let attempts = 0
       while (attempts < 10 && this.fileService.isProcessRunning(pid)) {
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        await new Promise((resolve) => setTimeout(resolve, 1000))
         attempts++
       }
 
@@ -130,13 +128,12 @@ export class ProcessManager {
 
       await this.fileService.removePidFile(this.config.pidFile)
       console.log('✅ 开发服务器已停止')
-      
+
       // 记录停止日志
       const stopLog = `\n=== devctl 手动停止服务器 ${new Date().toISOString()} ===\n\n`
       try {
         await this.fileService.fs.appendFile(this.config.logFile, stopLog)
       } catch {}
-      
     } catch (error) {
       console.log('❌ 停止服务器时出现错误:', error)
     }
@@ -145,20 +142,20 @@ export class ProcessManager {
   async restart(): Promise<void> {
     console.log('🔄 重启开发服务器...')
     await this.stop()
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 2000))
     await this.start()
   }
 
   async status(): Promise<ProcessInfo> {
     const pid = await this.fileService.readPidFile(this.config.pidFile)
-    
+
     if (!pid) {
       console.log('❌ 开发服务器未运行')
       return { pid: 0, isRunning: false }
     }
 
     const isRunning = this.fileService.isProcessRunning(pid)
-    
+
     if (!isRunning) {
       console.log('❌ 开发服务器未运行')
       console.log('🧹 清理无效的PID文件')
@@ -205,14 +202,17 @@ export class ProcessManager {
 
       // 实现类似 tail -f 的功能
       const { spawn } = await import('child_process')
-      
+
       let tailCommand: string
       let tailArgs: string[]
 
       if (process.platform === 'win32') {
         // Windows 上使用 PowerShell 的 Get-Content -Tail
         tailCommand = 'powershell'
-        tailArgs = ['-Command', `Get-Content -Path "${this.config.logFile}" -Wait -Tail 50`]
+        tailArgs = [
+          '-Command',
+          `Get-Content -Path "${this.config.logFile}" -Wait -Tail 50`,
+        ]
       } else {
         // Unix 系统使用 tail -f
         tailCommand = 'tail'
@@ -220,7 +220,7 @@ export class ProcessManager {
       }
 
       const tail = spawn(tailCommand, tailArgs, {
-        stdio: 'inherit'
+        stdio: 'inherit',
       })
 
       // 处理中断信号
@@ -233,7 +233,6 @@ export class ProcessManager {
         console.log('❌ 无法显示日志:', error.message)
         console.log('💡 请手动查看日志文件:', this.config.logFile)
       })
-
     } catch (error) {
       console.log('❌ 显示日志时出现错误:', error)
       console.log('💡 请手动查看日志文件:', this.config.logFile)
