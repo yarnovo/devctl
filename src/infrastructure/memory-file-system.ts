@@ -1,4 +1,4 @@
-import { fs, vol, type IFs } from 'memfs'
+import { fs, vol, type IFs, type NestedDirectoryJSON } from 'memfs'
 import { Stats } from 'fs'
 import { injectable } from 'tsyringe'
 import { IFileSystem } from '../interfaces/file-system.interface.js'
@@ -89,7 +89,7 @@ export class MemoryFileSystem implements IFileSystem {
     vol.fromJSON(json, cwd)
   }
 
-  fromNestedJSON(json: any, cwd?: string): void {
+  fromNestedJSON(json: NestedDirectoryJSON, cwd?: string): void {
     vol.fromNestedJSON(json, cwd)
   }
 }

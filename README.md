@@ -15,9 +15,10 @@ devctl is a lightweight command-line tool that runs your `npm run dev` command i
 ### 🌟 Features
 
 - 🔄 **Background Running**: Run `npm run dev` in the background, freeing up your terminal
-- 📝 **Log Recording**: Automatically redirect console output to log files
+- 📝 **Log Recording**: Automatically redirect console output to log files (clears logs on each start)
 - ⚡ **Simple Control**: Start, stop, restart, and check status
 - 📊 **Status Query**: View server running status and process information
+- 🚫 **Process Protection**: Prevents duplicate starts with clear error messages
 - 🎯 **Cross-platform**: Supports Windows, macOS, and Linux
 - 🔍 **Log Viewing**: Support for real-time log tracking
 - 🧪 **Code Quality**: Integrated with ESLint v9, Prettier, TypeScript type checking
@@ -83,6 +84,13 @@ Example output:
 📄 Log file: ./logs/dev.log
 ```
 
+If the server is already running:
+
+```
+❌ Development server is already running! PID: 12345
+💡 Use 'devctl stop' to stop the server
+```
+
 Check status:
 
 ```bash
@@ -116,16 +124,17 @@ logs/
 └── dev.pid          # Process ID file
 ```
 
-- `dev.log`: Records all console output from `npm run dev`
+- `dev.log`: Records all console output from `npm run dev` (cleared on each start)
 - `dev.pid`: Stores the current running process ID
 
 ## 🔧 How It Works
 
 1. **On Start**: `devctl start` executes `npm run dev` and runs it in the background
-2. **Log Recording**: Redirects all console output to `logs/dev.log` file
-3. **Process Management**: Saves process ID to `logs/dev.pid` file
-4. **Status Query**: Checks if the server is still running by verifying the process ID
-5. **Stop Service**: Terminates the background development server using the process ID
+2. **Process Check**: Prevents duplicate starts by checking if a server is already running
+3. **Log Recording**: Redirects all console output to `logs/dev.log` file (cleared on each start)
+4. **Process Management**: Saves process ID to `logs/dev.pid` file
+5. **Status Query**: Checks if the server is still running by verifying the process ID
+6. **Stop Service**: Terminates the background development server using the process ID
 
 ## 🐛 Troubleshooting
 

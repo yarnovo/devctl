@@ -45,7 +45,8 @@ export class ProcessManager {
 
     // 启动开发服务器
     // 使用独立的文件描述符来写入日志，避免阻塞主进程
-    const logFd = fs.openSync(this.config.logFile, 'a')
+    // 使用 'w' 模式，每次启动时清空日志文件
+    const logFd = fs.openSync(this.config.logFile, 'w')
 
     const child = spawn('npm', ['run', 'dev'], {
       detached: true,
@@ -68,8 +69,9 @@ export class ProcessManager {
       '',
     ].join('\n')
 
-    // 写入日志头部（在子进程输出之前）
-    fs.appendFileSync(this.config.logFile, logHeader)
+    // 写入日志头部
+    // 注意：由于文件已经以 'w' 模式打开，这里直接写入即可
+    fs.writeFileSync(this.config.logFile, logHeader)
 
     // 分离子进程，让它在后台运行
     child.unref()

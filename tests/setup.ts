@@ -1,8 +1,11 @@
 import 'reflect-metadata'
 import { beforeEach } from 'vitest'
 import { container } from 'tsyringe'
-import { vol } from 'memfs'
-import { IFileSystem, FILE_SYSTEM_TOKEN } from '../src/interfaces/file-system.interface.js'
+import { vol, type NestedDirectoryJSON } from 'memfs'
+import {
+  IFileSystem,
+  FILE_SYSTEM_TOKEN,
+} from '../src/interfaces/file-system.interface.js'
 import { MemoryFileSystem } from '../src/infrastructure/memory-file-system.js'
 import { FileService } from '../src/services/file-service.js'
 import { ProcessManager } from '../src/process-manager.js'
@@ -11,7 +14,7 @@ import { ProcessManager } from '../src/process-manager.js'
 export function setupTestContainer(): void {
   // 清空容器
   container.clearInstances()
-  
+
   // 注册内存文件系统用于测试
   container.registerSingleton<IFileSystem>(FILE_SYSTEM_TOKEN, MemoryFileSystem)
   container.registerSingleton(FileService)
@@ -24,12 +27,18 @@ export function resetMemoryFileSystem(): void {
 }
 
 // 创建虚拟文件系统
-export function createVirtualFileSystem(files: Record<string, string>, cwd?: string): void {
+export function createVirtualFileSystem(
+  files: Record<string, string>,
+  cwd?: string
+): void {
   vol.fromJSON(files, cwd)
 }
 
 // 创建嵌套虚拟文件系统
-export function createNestedVirtualFileSystem(files: any, cwd?: string): void {
+export function createNestedVirtualFileSystem(
+  files: NestedDirectoryJSON,
+  cwd?: string
+): void {
   vol.fromNestedJSON(files, cwd)
 }
 

@@ -49,6 +49,7 @@ devctl 是一个简单的 npm dev 命令后台管理工具，使用 TypeScript �
 - 使用 TypeScript 严格模式
 - 遵循 ESLint 和 Prettier 配置
 - 使用依赖注入管理服务
+- ESLint 配置中 @typescript-eslint/no-explicit-any 设置为 'error'，禁止使用 any 类型
 
 ### 测试策略
 
@@ -68,6 +69,19 @@ devctl 是一个简单的 npm dev 命令后台管理工具，使用 TypeScript �
 - 保留 `prepublishOnly` 钩子，确保发布前自动构建
 - 测试覆盖率报告在 GitHub Actions Summary 中显示，不上传 artifacts
 
-## 更新历史
+## 关键功能实现
 
-- 2025-07-21: 创建 CI/CD 配置和部署文档
+### 进程管理
+
+- **重复启动保护**：ProcessManager 的 start() 方法会检查 PID 文件，如果进程已运行会报错
+- **日志清空机制**：每次 start 时使用 'w' 模式打开日志文件，自动清空旧日志
+
+### 类型定义
+
+- 使用 memfs 包提供的 `NestedDirectoryJSON` 类型来定义嵌套的文件系统结构
+- 在 memory-file-system.ts 和 setup.ts 中正确导入和使用该类型
+
+## 常见错误与解决方案
+
+1. **文档更新不完整**：修改功能时需要同时更新英文和中文 README
+2. **类型定义**：避免使用 any，应该查找并使用正确的类型定义
