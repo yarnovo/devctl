@@ -1,206 +1,208 @@
 # devctl
 
-🚀 简单的 npm dev 命令后台管理工具
+[中文文档](./README.zh-CN.md)
+
+🚀 A simple background process manager for npm dev commands
 
 [![npm version](https://badge.fury.io/js/devctl.svg)](https://badge.fury.io/js/devctl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
 
-## 📖 简介
+## 📖 Introduction
 
-devctl 是一个轻量级的命令行工具，可以将你的 `npm run dev` 命令置于后台运行，并提供简单的管理命令。让你在开发时不再被占用终端，同时自动记录开发服务器的日志输出。
+devctl is a lightweight command-line tool that runs your `npm run dev` command in the background and provides simple management commands. Free up your terminal during development while automatically logging all server output.
 
-### 🌟 特性
+### 🌟 Features
 
-- 🔄 **后台运行**：将 `npm run dev` 置于后台，释放终端
-- 📝 **日志记录**：自动将控制台输出重定向到日志文件
-- ⚡ **简单控制**：启动、停止、重启、查看状态
-- 📊 **状态查询**：查看服务器运行状态和进程信息
-- 🎯 **跨平台**：支持 Windows、macOS 和 Linux
-- 🔍 **日志查看**：支持实时日志跟踪
-- 🧪 **代码质量**：集成 ESLint v9、Prettier、TypeScript 类型检查
-- 🔐 **Git Hooks**：使用 Husky + lint-staged 确保代码质量
+- 🔄 **Background Running**: Run `npm run dev` in the background, freeing up your terminal
+- 📝 **Log Recording**: Automatically redirect console output to log files
+- ⚡ **Simple Control**: Start, stop, restart, and check status
+- 📊 **Status Query**: View server running status and process information
+- 🎯 **Cross-platform**: Supports Windows, macOS, and Linux
+- 🔍 **Log Viewing**: Support for real-time log tracking
+- 🧪 **Code Quality**: Integrated with ESLint v9, Prettier, TypeScript type checking
+- 🔐 **Git Hooks**: Use Husky + lint-staged to ensure code quality
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 安装
+### Installation
 
 ```bash
-# 全局安装（推荐）
+# Global installation (recommended)
 npm install -g devctl
 
-# 或者在项目中安装
+# Or install in your project
 npm install --save-dev devctl
 ```
 
-### 基本使用
+### Basic Usage
 
 ```bash
-# 启动开发服务器（后台运行）
+# Start development server (in background)
 devctl start
 
-# 查看服务器状态
+# Check server status
 devctl status
 
-# 查看实时日志
+# View real-time logs
 devctl logs
 
-# 停止服务器
+# Stop server
 devctl stop
 
-# 重启服务器
+# Restart server
 devctl restart
 ```
 
-## 📚 命令说明
+## 📚 Command Reference
 
-### 可用命令
+### Available Commands
 
-| 命令             | 描述                   |
-| ---------------- | ---------------------- |
-| `devctl start`   | 后台启动 `npm run dev` |
-| `devctl stop`    | 停止开发服务器         |
-| `devctl restart` | 重启开发服务器         |
-| `devctl status`  | 查看服务器运行状态     |
-| `devctl logs`    | 查看实时日志           |
+| Command          | Description                       |
+| ---------------- | --------------------------------- |
+| `devctl start`   | Start `npm run dev` in background |
+| `devctl stop`    | Stop the development server       |
+| `devctl restart` | Restart the development server    |
+| `devctl status`  | Check server running status       |
+| `devctl logs`    | View real-time logs               |
 
-### 使用示例
+### Usage Examples
 
-启动开发服务器：
+Start development server:
 
 ```bash
 devctl start
 ```
 
-输出示例：
+Example output:
 
 ```
-🚀 正在启动开发服务器...
-✅ 开发服务器已启动!
-📝 进程ID: 12345
-📄 日志文件: ./logs/dev.log
+🚀 Starting development server...
+✅ Development server started!
+📝 Process ID: 12345
+📄 Log file: ./logs/dev.log
 ```
 
-查看状态：
+Check status:
 
 ```bash
 devctl status
 ```
 
-输出示例：
+Example output:
 
 ```
-✅ 开发服务器正在运行
-📝 进程ID: 12345
-📄 日志文件: ./logs/dev.log
-🕐 运行时间: 01:23:45
+✅ Development server is running
+📝 Process ID: 12345
+📄 Log file: ./logs/dev.log
+🕐 Uptime: 01:23:45
 ```
 
-查看日志：
+View logs:
 
 ```bash
 devctl logs
 ```
 
-这会实时显示开发服务器的输出日志。
+This will display real-time output from the development server.
 
-## 📁 文件结构
+## 📁 File Structure
 
-devctl 会在项目根目录创建一个 `logs` 文件夹：
+devctl creates a `logs` folder in your project root:
 
 ```
 logs/
-├── dev.log          # 开发服务器日志
-└── dev.pid          # 进程ID文件
+├── dev.log          # Development server logs
+└── dev.pid          # Process ID file
 ```
 
-- `dev.log`：记录 `npm run dev` 的所有控制台输出
-- `dev.pid`：存储当前运行的进程ID
+- `dev.log`: Records all console output from `npm run dev`
+- `dev.pid`: Stores the current running process ID
 
-## 🔧 工作原理
+## 🔧 How It Works
 
-1. **启动时**：`devctl start` 执行 `npm run dev` 并将其置于后台
-2. **日志记录**：将所有控制台输出重定向到 `logs/dev.log` 文件
-3. **进程管理**：将进程ID保存到 `logs/dev.pid` 文件
-4. **状态查询**：通过检查进程ID来判断服务器是否还在运行
-5. **停止服务**：通过进程ID来终止后台运行的开发服务器
+1. **On Start**: `devctl start` executes `npm run dev` and runs it in the background
+2. **Log Recording**: Redirects all console output to `logs/dev.log` file
+3. **Process Management**: Saves process ID to `logs/dev.pid` file
+4. **Status Query**: Checks if the server is still running by verifying the process ID
+5. **Stop Service**: Terminates the background development server using the process ID
 
-## 🐛 常见问题
+## 🐛 Troubleshooting
 
-### 问题：端口被占用
+### Issue: Port Already in Use
 
-如果你的开发服务器提示端口被占用，这是正常的，因为 devctl 不控制端口分配，它只是代理执行 `npm run dev` 命令。
+If your development server reports that the port is already in use, this is normal. devctl doesn't control port allocation; it only proxies the `npm run dev` command.
 
-### 问题：进程丢失
+### Issue: Process Lost
 
 ```bash
 Warning: Process not found, cleaning up PID file
 ```
 
-这是正常的清理行为，重新启动即可：
+This is normal cleanup behavior. Simply restart:
 
 ```bash
 devctl start
 ```
 
-### 问题：权限不足
+### Issue: Permission Denied
 
-确保对项目目录有写权限，以便创建 `logs` 文件夹。
+Ensure you have write permissions in the project directory to create the `logs` folder.
 
-## 💻 开发
+## 💻 Development
 
-### 本地开发
+### Local Development
 
 ```bash
-# 克隆项目
+# Clone the project
 git clone <repository-url>
 cd devctl
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 构建项目
+# Build project
 npm run build
 
-# 链接到全局（用于测试）
+# Link globally (for testing)
 npm link
 ```
 
-### 开发脚本
+### Development Scripts
 
 ```bash
-# 运行所有检查（推荐在提交前运行）
+# Run all checks (recommended before committing)
 npm run check
 
-# 单独运行各项检查
-npm run typecheck  # TypeScript 类型检查
-npm run lint       # ESLint 代码检查
-npm run test       # 运行测试
+# Run individual checks
+npm run typecheck  # TypeScript type checking
+npm run lint       # ESLint code checking
+npm run test       # Run tests
 
-# 代码格式化
-npm run format     # 格式化所有代码
-npm run format:check  # 检查格式化状态
+# Code formatting
+npm run format     # Format all code
+npm run format:check  # Check formatting status
 
-# 修复 ESLint 问题
+# Fix ESLint issues
 npm run lint:fix
 ```
 
-### 提交代码
+### Committing Code
 
-本项目使用 Husky + lint-staged 确保代码质量。提交代码时会自动：
+This project uses Husky + lint-staged to ensure code quality. When committing code, it will automatically:
 
-1. 格式化暂存的文件（使用 Prettier）
-2. 运行 ESLint 检查并自动修复
-3. 只有通过所有检查才能提交
+1. Format staged files (using Prettier)
+2. Run ESLint checks and auto-fix
+3. Only allow commits if all checks pass
 
 ```bash
-# 添加文件到暂存区
+# Add files to staging area
 git add .
 
-# 提交（会自动触发检查）
-git commit -m "feat: 添加新功能"
+# Commit (will automatically trigger checks)
+git commit -m "feat: add new feature"
 ```
 
-## 📄 许可证
+## 📄 License
 
-本项目采用 [MIT 许可证](LICENSE)。
+This project is licensed under the [MIT License](LICENSE).
